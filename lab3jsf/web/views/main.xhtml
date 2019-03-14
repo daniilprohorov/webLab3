@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ace ="http://www.icefaces.org/icefaces/components"
+      xmlns:p ="http://primefaces.org/ui">
+
+
+
+<h:head>
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="../styles/external.css"/>
+
+</h:head>
+
+<link rel="stylesheet" type="text/css" href="/styles/external.css"/>
+<h:body>
+    <h:form id = "Form">
+
+<!--        <p:panelGrid style="width: 100%" styleClass="ui-noborder">-->
+<!--            <p:column style="width: 50%; text-align: left"  >-->
+                <table class = "input_tables" align="center" style="width: 100%">
+                   <tr >
+                       <td style = "width : 50%">
+                           <div align="center">
+
+
+                               <f:verbatim escape="true">
+                                   <canvas id = "canvas_id" width = "600" height = "600">
+                                   </canvas>
+                               </f:verbatim>
+
+                               <script type="text/javascript">
+                                   var canvas = document.getElementById('canvas_id');
+                                   var ctx = canvas.getContext('2d');
+                                   function printPlot(){
+
+                                       var height = 600;
+                                       var width = 600;
+                                       var onew = width/10;
+                                       var oneh = height/10;
+                                       var R = oneh*4;
+                                       ctx.beginPath();
+                                       ctx.save();
+
+                                       ctx.translate(width/2, height/2);
+                                       ctx.scale(1, -1);
+
+                                       //Оси
+                                       ctx.fillStyle = "black";
+                                       ctx.moveTo(-5*onew, 0);
+                                       ctx.lineTo(5*onew, 0);
+                                       ctx.moveTo(0, -5*oneh);
+                                       ctx.lineTo(0, 5*oneh);
+
+                                       //Стрелки
+                                       ctx.moveTo(0, height/2);
+                                       ctx.lineTo(-4, height/2 - 7);
+                                       ctx.moveTo(0, height/2);
+                                       ctx.lineTo(4, height/2 - 7);
+
+                                       ctx.moveTo(width/2, 0);
+                                       ctx.lineTo(width/2 - 7, 4);
+                                       ctx.moveTo(width/2, 0);
+                                       ctx.lineTo(width/2 - 7, -4);
+
+                                       //Обозначения
+                                       ctx.moveTo(-4*onew, -4);
+                                       ctx.lineTo(-4*onew, 4);
+                                       ctx.moveTo(-2*onew, -4);
+                                       ctx.lineTo(-2*onew, 4);
+                                       ctx.moveTo(4*onew, -4);
+                                       ctx.lineTo(4*onew, 4);
+                                       ctx.moveTo(2*onew, -4);
+                                       ctx.lineTo(2*onew, 4);
+                                       ctx.moveTo(-4, -4*oneh);
+                                       ctx.lineTo(4, -4*oneh);
+                                       ctx.moveTo(-4, -2*oneh);
+                                       ctx.lineTo(4, -2*oneh);
+                                       ctx.moveTo(-4, 2*oneh);
+                                       ctx.lineTo(4, 2*oneh);
+                                       ctx.moveTo(-4, 4*oneh);
+                                       ctx.lineTo(4, 4*oneh);
+
+                                       //Фигура
+                                       ctx.moveTo(0, 0);
+                                       ctx.arc(0, 0, R, -3.14/2, -3.14, true  );
+                                       ctx.fillStyle = 'blue';
+                                       ctx.moveTo(-R, 0);
+                                       ctx.lineTo(0, R/2);
+                                       ctx.lineTo(R, R/2);
+                                       ctx.lineTo(R, 0);
+                                       ctx.lineTo(0, 0);
+                                       ctx.fill();
+
+                                       //Обозначения
+                                       ctx.fillStyle = 'black';
+                                       ctx.font = '15pt Arial';
+                                       ctx.save();
+                                       ctx.scale(1, -1);
+                                       ctx.fillText("-R", -onew*4 -12, 23);
+                                       ctx.fillText("-R/2", -onew*2 - 13, 23);
+                                       ctx.fillText("R", onew*4 -12, 23);
+                                       ctx.fillText("R/2", onew*2 - 3, 23);
+                                       ctx.fillText("X", onew*5 - 15, 23 );
+
+                                       ctx.fillText("-R",-32, oneh*4 + 5);
+                                       ctx.fillText("-R/2",-58, oneh*2 + 5 );
+                                       ctx.fillText("R",-20, -oneh*4 + 5);
+                                       ctx.fillText("R/2",-46, -oneh*2 + 5);
+                                       ctx.fillText("Y",-20, -oneh*5 + 15);
+                                       ctx.restore();
+                                       ctx.restore();
+                                       ctx.stroke();
+                                   }
+                                   function parseList(str){
+                                       var list = str.slice(1, str.length - 1).split(", ").map(parseFloat);
+
+                                       return list;
+                                   }
+                                   function drawPoints(){
+                                       var x_lst = parseList("#{calc.getX_lst()}");
+                                       var y_lst = parseList("#{calc.getY_lst()}");
+                                       // let r_lst = parseList("#{calc.getR_lst()}");
+                                       var res_lst = parseList("#{calc.getRes_lst()}");
+                                       var r = parseFloat("#{calc.r}");
+                                       var max = x_lst.length;
+                                       var i = 0;
+                                       console.log(max);
+                                       function forFunc (i, max){
+                                           if( i != max){
+                                               drawPoint(x_lst[i], y_lst[i], r, res_lst[i]);
+                                               i++;
+                                               forFunc(i, max);
+                                           }
+                                       }
+                                       forFunc(i, max);
+                                       console.log(res_lst);
+                                   }
+                                   function drawPoint(xv, yv, r, res){
+
+                                       var x = 240*(xv + r*1.25)/r;
+                                       var y = 240*(yv - r*1.25)/-r;
+                                       ctx.beginPath();
+                                       if (res === 1.0){
+                                           ctx.fillStyle = 'green';
+                                       }
+                                       else {
+                                           ctx.fillStyle = 'red';
+                                       }
+                                       ctx.arc(x-1, y-1, 6, 0, 2*Math.PI);
+                                       ctx.fill();
+                                       ctx.stroke();
+                                   }
+                                   function clickPlot(){
+                                       var r = parseInt(document.getElementById('Form:r_input').value);
+                                       var x = r*event.offsetX/240 - r*1.25;
+                                       var y = -1*r*event.offsetY/240 + r*1.25;
+                                       document.getElementById('Form:hidden_x').value = x;
+                                       document.getElementById('Form:y_input').value = y;
+                                       document.getElementById('Form:submit').click();
+
+                                   }
+
+                                   printPlot();
+                                   drawPoints();
+                                   canvas.addEventListener('click', clickPlot, true);
+                               </script>
+                           </div>
+                       </td>
+                      <td style = "width : 50%">
+                          <div align="center">
+                              <table class = "input_tables" align="center" >
+                                  <tr>
+                                      <td align="center">
+                                          <p> X </p>
+                                      </td>
+                                  </tr>
+                                  <tr>
+                                      <td align="center">
+                                          <ace:sliderEntry id = "x_input"  min = '-5' max = '5' value = "${calc.xslider}" stepPercent="10" >
+                                              <ace:ajax event="slideEnd" execute=":Form:print_x" render=":Form:slider_x hidden_x" />
+                                          </ace:sliderEntry>
+                                      </td>
+                                  </tr>
+                                  <tr>
+                                      <td  id = "print_x" align="center">
+                                          <h:outputText id = "slider_x"  value = "${calc.xslider}" ></h:outputText>
+                                      </td>
+                                  </tr>
+                              </table>
+                              <table class = "input_tables" align="center" >
+                                  <tr>
+                                      <td align="center">
+                                          <p> Y </p>
+                                      </td>
+                                  </tr>
+                                  <tr>
+                                      <td align="center">
+
+                                          <h:inputText id = "y_input" value="${calc.y}" label = "Y" maxlength="8">
+                                          </h:inputText>
+                                      </td>
+                                  </tr>
+                                  <tr>
+                                      <td>
+                                          <h:message for="y_input" style="color:red"></h:message>
+                                      </td>
+                                  </tr>
+                              </table>
+                              <table class = "input_tables" align="center" >
+                                  <tr>
+                                      <td align="center">
+                                          <p> R </p>
+                                      </td>
+                                  </tr>
+                                  <tr>
+                                      <td align="center">
+                                          <h:selectOneMenu id = "r_input" value = "${calc.r}">
+                                              <f:selectItem itemValue = "1" ituemLabel = "1" />
+                                              <f:selectItem itemValue = "2" itemLabel = "2" />
+                                              <f:selectItem itemValue = "3" itemLabel = "3" />
+                                              <f:selectItem itemValue = "4" itemLabel = "4" />
+                                              <f:selectItem itemValue = "5" itemLabel = "5" />
+                                          </h:selectOneMenu>
+                                      </td>
+                                  </tr>
+                              </table>
+                              <table class = "input_tables" align="center" >
+                                  <tr>
+                                      <td align="center">
+                                          <h:commandButton id = "submit" value = "SUBMIT" action = "#{calc.exe}" onclick="location.reload()" >
+<!--                                                                                  <f:ajax  render = ":Form:canvas_id res x_input" execute="@all" update = "@this" />-->
+                                          </h:commandButton>
+
+                                      </td>
+                                      <td >
+                                          <h:button value="BACK" outcome="index"/>
+                                      </td>
+                                      <td>
+                                          <h:commandButton value = "CLEAR" action = "${calc.clear()}"/>
+                                      </td>
+                                  </tr>
+                                  <tr>
+                                     <td>
+                                         <div align="center" style="color: red; text-align: center; width: 100%">
+                                             <h:outputText value="#{calc.validation_msg}" style="text-align: center"/>
+                                         </div>
+
+                                     </td>
+                                  </tr>
+                              </table>
+                          </div>
+                      </td>
+                   </tr>
+                </table>
+
+                <h:dataTable styleClass="input_tables" style="width: 100%; text-align: center " value="${output.out}" var = "o">
+                    <h:column>
+    				<!-- column header -->
+    				<f:facet name="header">X</f:facet>
+    				<!-- row record -->
+    				#{o.x}
+                    </h:column>
+
+                    <h:column>
+    				<f:facet name="header">Y</f:facet>
+    				#{o.y}
+                    </h:column>
+
+                    <h:column>
+    				<f:facet name="header">R</f:facet>
+    				#{o.r}
+                    </h:column>
+
+                    <h:column>
+    				<f:facet name="header">Result</f:facet>
+    				#{o.res}
+                    </h:column>
+                </h:dataTable>
+
+        <h:inputText id = "hidden_x" value="#{calc.x}" style="display: none"/>
+    </h:form>
+</h:body>
+</html>
+
+

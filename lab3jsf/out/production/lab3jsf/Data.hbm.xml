@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="Data" table="DATA">
+        <id name="id" column="ID">
+            <generator class="native"></generator>
+        </id>
+        <property name="x" type="double" column="x"/>
+        <property name="y" type="double" column="y"/>
+        <property name="r" type="double" column="r"/>
+        <property name="res" type="double" column="res"/>
+    </class>
+</hibernate-mapping>

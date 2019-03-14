@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:p="http://primefaces.org/ui">
+<head>
+</head>
+<body>
+
+<f:view>
+    <h:form>
+
+        <div align="center">
+            <p> Прохоров Данииил Андреевич</p>
+            <p> Вариант №6546 </p>
+            <p>
+                <h:button value="MAIN" outcome="main"/>
+
+            </p>
+            <span id = 'time'></span>
+
+        </div>
+    </h:form>
+
+    <!--clock-->
+</f:view>
+ <script type="text/javascript" >
+     document.addEventListener("DOMContentLoaded", function(event) {
+         const print_time = () => {
+             let str = 'Время: '
+             let now = new Date()
+             document.getElementById('time').innerHTML =  str+now.getHours() + ':' + now.getMinutes()+ ':' + now.getSeconds()
+         }
+         print_time()
+         setInterval(print_time, 9000)
+     });
+ </script>
+</body>
+</html>
